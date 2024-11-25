@@ -1,4 +1,4 @@
-using DispatcherService.Domain.Entities;
+﻿using DispatcherService.Domain.Entities;
 
 namespace DispatcherService.Domain.Test;
 
