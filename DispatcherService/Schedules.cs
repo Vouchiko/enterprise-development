@@ -8,32 +8,32 @@ public class Schedule
     /// <summary>
     /// Уникальный идентификатор расписания.
     /// </summary>
-    public int Id { get; set; }
+    public required int Id { get; set; }
 
     /// <summary>
     /// Идентификатор транспортного средства.
     /// </summary>
-    public int TransportId { get; set; }
+    public int? TransportId { get; set; }
 
     /// <summary>
     /// Идентификатор водителя.
     /// </summary>
-    public int DriverId { get; set; }
+    public int? DriverId { get; set; }
 
     /// <summary>
     /// Номер маршрута.
     /// </summary>
-    public string RouteNumber { get; set; }
+    public string? RouteNumber { get; set; }
 
     /// <summary>
     /// Время выхода на рейс.
     /// </summary>
-    public DateTime StartTime { get; set; }
+    public DateTime? StartTime { get; set; }
 
     /// <summary>
     /// Время окончания рейса.
     /// </summary>
-    public DateTime EndTime { get; set; }
+    public DateTime? EndTime { get; set; }
 
     // Навигационные свойства
     public Transport? Transport { get; set; }
@@ -41,7 +41,7 @@ public class Schedule
     public Driver? Driver { get; set; }
 
     // Конструктор с параметрами
-    public Schedule(int id, int transportId, int driverId, string routeNumber, DateTime startTime, DateTime endTime)
+    public Schedule(int id, int? transportId = null, int? driverId = null, string? routeNumber = null, DateTime? startTime = null, DateTime? endTime = null, Transport? transport = null, Driver driver = null)
     {
         Id = id;
         TransportId = transportId;
@@ -49,5 +49,7 @@ public class Schedule
         RouteNumber = routeNumber;
         StartTime = startTime;
         EndTime = endTime;
+        Transport = transport;
+        Driver = driver;
     }
 }

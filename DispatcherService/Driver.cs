@@ -8,35 +8,35 @@ public class Driver
     /// <summary>
     /// Уникальный идентификатор водителя.
     /// </summary>
-    public int Id { get; set; }
+    public required int Id { get; set; }
 
     /// <summary>
     /// Полное имя водителя.
     /// </summary>
-    public string FullName { get; set; }
+    public string? FullName { get; set; }
 
     /// <summary>
     /// Паспортные данные.
     /// </summary>
-    public string Passport { get; set; }
+    public string? Passport { get; set; }
 
     /// <summary>
     /// Номер водительского удостоверения.
     /// </summary>
-    public string DriverLicense { get; set; }
+    public string? DriverLicense { get; set; }
 
     /// <summary>
     /// Адрес проживания.
     /// </summary>
-    public string Address { get; set; }
+    public string? Address { get; set; }
 
     /// <summary>
     /// Телефонный номер.
     /// </summary>
-    public string PhoneNumber { get; set; }
+    public string? PhoneNumber { get; set; }
 
     // Конструктор с параметрами
-    public Driver(int id, string fullName, string passport, string driverLicense, string address, string phoneNumber)
+    public Driver(int id, string? fullName = null, string? passport = null, string? driverLicense = null, string? address = null, string? phoneNumber = null)
     {
         Id = id;
         FullName = fullName;

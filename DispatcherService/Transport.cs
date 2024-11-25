@@ -8,40 +8,40 @@ public class Transport
     /// <summary>
     /// Уникальный идентификатор транспортного средства.
     /// </summary>
-    public int Id { get; set; }
+    public required int Id { get; set; }
 
     /// <summary>
     /// Государственный номер.
     /// </summary>
-    public string RegistrationNumber { get; set; }
+    public string? RegistrationNumber { get; set; }
 
     /// <summary>
     /// Тип транспортного средства (Автобус, Троллейбус, Трамвай).
     /// </summary>
-    public string Type { get; set; }
+    public string? Type { get; set; }
 
     /// <summary>
     /// Модель транспортного средства.
     /// </summary>
-    public string Model { get; set; }
+    public string? Model { get; set; }
 
     /// <summary>
     /// Низкопольный (true/false).
     /// </summary>
-    public bool IsLowFloor { get; set; }
+    public bool? IsLowFloor { get; set; }
 
     /// <summary>
     /// Максимальная вместимость.
     /// </summary>
-    public int MaxCapacity { get; set; }
+    public int? MaxCapacity { get; set; }
 
     /// <summary>
     /// Год выпуска.
     /// </summary>
-    public int YearOfManufacture { get; set; }
+    public int? YearOfManufacture { get; set; }
 
     // Конструктор с параметрами
-    public Transport(int id, string registrationNumber, string type, string model, bool isLowFloor, int maxCapacity, int yearOfManufacture)
+    public Transport(int id, string? registrationNumber = null, string? type = null, string? model = null, bool? isLowFloor = null, int? maxCapacity = null, int? yearOfManufacture = null)
     {
         Id = id;
         RegistrationNumber = registrationNumber;
@@ -50,6 +50,5 @@ public class Transport
         IsLowFloor = isLowFloor;
         MaxCapacity = maxCapacity;
         YearOfManufacture = yearOfManufacture;
-
     }
 }
