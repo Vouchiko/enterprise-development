@@ -36,6 +36,7 @@ public class DispatchServiceTest(TestDataProvider testDataProvider) : IClassFixt
             .ToList();
 
         Assert.NotEmpty(drivers);
+        Assert.Equal(5, drivers.Count);
     }
 
     /// <summary>
@@ -45,12 +46,13 @@ public class DispatchServiceTest(TestDataProvider testDataProvider) : IClassFixt
     public void TestTotalTripTimeByTransportTypeAndModel()
     {
         var transportSummary = _testDataProvider.schedules
-            .GroupBy(s => new { s.Transport.Type, s.Transport.Model })
+            .Where(s => s.StartTime.HasValue && s.EndTime.HasValue)
+            .GroupBy(s => new { s.Transport?.Type, s.Transport?.Model })
             .Select(g => new
             {
                 TransportType = g.Key.Type,
                 Model = g.Key.Model,
-                TotalTime = g.Sum(s => (s.EndTime - s.StartTime).TotalHours)
+                TotalTime = g.Sum(s => (s.EndTime!.Value - s.StartTime!.Value).TotalHours)
             })
             .ToList();
 
@@ -85,13 +87,14 @@ public class DispatchServiceTest(TestDataProvider testDataProvider) : IClassFixt
     public void TestDriverTripStatistics()
     {
         var driverStats = _testDataProvider.schedules
+            .Where(s => s.StartTime.HasValue && s.EndTime.HasValue)
             .GroupBy(s => s.Driver)
             .Select(g => new
             {
                 Driver = g.Key,
                 TripCount = g.Count(),
-                AverageTime = g.Average(s => (s.EndTime - s.StartTime).TotalHours),
-                MaxTime = g.Max(s => (s.EndTime - s.StartTime).TotalHours)
+                AverageTime = g.Average(s => (s.EndTime!.Value - s.StartTime!.Value).TotalHours),
+                MaxTime = g.Max(s => (s.EndTime!.Value - s.StartTime!.Value).TotalHours)
             })
             .ToList();
 
