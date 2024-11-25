@@ -40,13 +40,6 @@ public class Transport
     /// </summary>
     public int YearOfManufacture { get; set; }
 
-    // Конструктор по умолчанию
-    public Transport()
-    {
-
-        Id = 1;
-    }
-
     // Конструктор с параметрами
     public Transport(int id, string registrationNumber, string type, string model, bool isLowFloor, int maxCapacity, int yearOfManufacture)
     {

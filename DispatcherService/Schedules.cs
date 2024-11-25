@@ -40,12 +40,6 @@ public class Schedule
 
     public Driver? Driver { get; set; }
 
-    // Конструктор по умолчанию
-    public Schedule()
-    {
-        Id = 1;
-    }
-
     // Конструктор с параметрами
     public Schedule(int id, int transportId, int driverId, string routeNumber, DateTime startTime, DateTime endTime)
     {

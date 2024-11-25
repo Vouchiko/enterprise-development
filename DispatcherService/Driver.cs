@@ -35,12 +35,6 @@ public class Driver
     /// </summary>
     public string PhoneNumber { get; set; }
 
-    // Конструктор по умолчанию
-    public Driver()
-    {
-        Id = 1;
-    }
-
     // Конструктор с параметрами
     public Driver(int id, string fullName, string passport, string driverLicense, string address, string phoneNumber)
     {
