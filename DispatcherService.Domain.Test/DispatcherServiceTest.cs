@@ -7,7 +7,7 @@ public class DispatchServiceTest(TestDataProvider testDataProvider) : IClassFixt
     private readonly TestDataProvider _testDataProvider = testDataProvider;
 
     /// <summary>
-    /// Вывести все сведения о конкретном транспортном средстве.
+    /// Р’С‹РІРµСЃС‚Рё РІСЃРµ СЃРІРµРґРµРЅРёСЏ Рѕ РєРѕРЅРєСЂРµС‚РЅРѕРј С‚СЂР°РЅСЃРїРѕСЂС‚РЅРѕРј СЃСЂРµРґСЃС‚РІРµ.
     /// </summary>
     [Fact]
     public void TestGetTransportDetails()
@@ -20,7 +20,7 @@ public class DispatchServiceTest(TestDataProvider testDataProvider) : IClassFixt
     }
 
     /// <summary>
-    /// Вывести всех водителей, совершивших поездки за заданный период, упорядочить по ФИО.
+    /// Р’С‹РІРµСЃС‚Рё РІСЃРµС… РІРѕРґРёС‚РµР»РµР№, СЃРѕРІРµСЂС€РёРІС€РёС… РїРѕРµР·РґРєРё Р·Р° Р·Р°РґР°РЅРЅС‹Р№ РїРµСЂРёРѕРґ, СѓРїРѕСЂСЏРґРѕС‡РёС‚СЊ РїРѕ Р¤РРћ.
     /// </summary>
     [Fact]
     public void TestGetDriversByTripPeriod()
@@ -40,7 +40,7 @@ public class DispatchServiceTest(TestDataProvider testDataProvider) : IClassFixt
     }
 
     /// <summary>
-    /// Вывести суммарное время поездок транспортного средства каждого типа и модели.
+    /// Р’С‹РІРµСЃС‚Рё СЃСѓРјРјР°СЂРЅРѕРµ РІСЂРµРјСЏ РїРѕРµР·РґРѕРє С‚СЂР°РЅСЃРїРѕСЂС‚РЅРѕРіРѕ СЃСЂРµРґСЃС‚РІР° РєР°Р¶РґРѕРіРѕ С‚РёРїР° Рё РјРѕРґРµР»Рё.
     /// </summary>
     [Fact]
     public void TestTotalTripTimeByTransportTypeAndModel()
@@ -61,7 +61,7 @@ public class DispatchServiceTest(TestDataProvider testDataProvider) : IClassFixt
     }
 
     /// <summary>
-    /// Вывести топ 5 водителей по совершенному количеству поездок.
+    /// Р’С‹РІРµСЃС‚Рё С‚РѕРї 5 РІРѕРґРёС‚РµР»РµР№ РїРѕ СЃРѕРІРµСЂС€РµРЅРЅРѕРјСѓ РєРѕР»РёС‡РµСЃС‚РІСѓ РїРѕРµР·РґРѕРє.
     /// </summary>
     [Fact]
     public void TestTop5DriversByTripCount()
@@ -81,7 +81,7 @@ public class DispatchServiceTest(TestDataProvider testDataProvider) : IClassFixt
     }
 
     /// <summary>
-    /// Вывести информацию о количестве поездок, среднем времени и максимальном времени поездки для каждого водителя.
+    /// Р’С‹РІРµСЃС‚Рё РёРЅС„РѕСЂРјР°С†РёСЋ Рѕ РєРѕР»РёС‡РµСЃС‚РІРµ РїРѕРµР·РґРѕРє, СЃСЂРµРґРЅРµРј РІСЂРµРјРµРЅРё Рё РјР°РєСЃРёРјР°Р»СЊРЅРѕРј РІСЂРµРјРµРЅРё РїРѕРµР·РґРєРё РґР»СЏ РєР°Р¶РґРѕРіРѕ РІРѕРґРёС‚РµР»СЏ.
     /// </summary>
     [Fact]
     public void TestDriverTripStatistics()
@@ -103,7 +103,7 @@ public class DispatchServiceTest(TestDataProvider testDataProvider) : IClassFixt
     }
 
     /// <summary>
-    /// Вывести информацию о транспортных средствах, совершивших максимальное число поездок за указанный период.
+    /// Р’С‹РІРµСЃС‚Рё РёРЅС„РѕСЂРјР°С†РёСЋ Рѕ С‚СЂР°РЅСЃРїРѕСЂС‚РЅС‹С… СЃСЂРµРґСЃС‚РІР°С…, СЃРѕРІРµСЂС€РёРІС€РёС… РјР°РєСЃРёРјР°Р»СЊРЅРѕРµ С‡РёСЃР»Рѕ РїРѕРµР·РґРѕРє Р·Р° СѓРєР°Р·Р°РЅРЅС‹Р№ РїРµСЂРёРѕРґ.
     /// </summary>
     [Fact]
     public void TestMostTripsByTransportInPeriod()
