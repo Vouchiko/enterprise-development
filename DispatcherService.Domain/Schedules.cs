@@ -35,7 +35,6 @@ public class Schedule
     /// </summary>
     public DateTime? EndTime { get; set; }
 
-    // Навигационные свойства
     public Transport? Transport { get; set; }
 
     public Driver? Driver { get; set; }
