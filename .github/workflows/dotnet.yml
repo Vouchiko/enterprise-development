@@ -21,8 +21,10 @@ jobs:
       with:
         dotnet-version: 8.0.x
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore DispatcherService.Domain.Test/DispatcherService.Domain.Test.csproj
+
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build DispatcherService.Domain.Test/DispatcherService.Domain.Test.csproj --no-restore
+
     - name: Test
       run: dotnet test DispatcherService.Domain.Test/DispatcherService.Domain.Test.csproj --no-build --verbosity normal
