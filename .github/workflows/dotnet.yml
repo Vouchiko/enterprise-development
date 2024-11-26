@@ -25,4 +25,4 @@ jobs:
     - name: Build
       run: dotnet build --no-restore
     - name: Test
-      run: dotnet test DispatcherServiceTest/DispatcherServiceTest.csproj --no-build --verbosity normal
+      run: dotnet test DispatcherService.Domain.Test\DispatcherService.Domain.Test.csproj --no-build --verbosity normal
