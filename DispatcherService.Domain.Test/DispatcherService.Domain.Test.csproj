@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DispatcherService\DispatcherService.csproj" />
+    <ProjectReference Include="..\DispatcherService.Domain\DispatcherService.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>
