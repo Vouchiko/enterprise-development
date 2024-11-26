@@ -35,8 +35,14 @@ public class Schedule
     /// </summary>
     public DateTime? EndTime { get; set; }
 
+    /// <summary>
+    /// Транспортное средство, выполняющее данный рейс.
+    /// </summary>
     public Transport? Transport { get; set; }
-
+     
+    /// <summary>
+    /// Водитель данного рейса.
+    /// </summary>
     public Driver? Driver { get; set; }
 
     // Конструктор с параметрами
