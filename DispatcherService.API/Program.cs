@@ -7,7 +7,7 @@ using DispatcherService.Domain.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Настройка служб и сервисов
+// РќР°СЃС‚СЂРѕР№РєР° СЃР»СѓР¶Р± Рё СЃРµСЂРІРёСЃРѕРІ
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -16,23 +16,23 @@ builder.Services.AddSwaggerGen(options =>
     options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 });
 
-// Добавление сервисов
+// Р”РѕР±Р°РІР»РµРЅРёРµ СЃРµСЂРІРёСЃРѕРІ
 builder.Services.AddSingleton<IService<DriverDto, DriverFullDto>, DriverService>();
 builder.Services.AddSingleton<IService<TransportDto, TransportFullDto>, TransportService>();
 builder.Services.AddSingleton<IService<SchedulesDto, SchedulesFullDto>, SchedulesService>();
 builder.Services.AddSingleton<IQueryService, QueryService>();
 
-// Добавление репозиториев
+// Р”РѕР±Р°РІР»РµРЅРёРµ СЂРµРїРѕР·РёС‚РѕСЂРёРµРІ
 builder.Services.AddSingleton<IRepository<Driver>, DriverRepository>();
 builder.Services.AddSingleton<IRepository<Transport>, TransportRepository>();
 builder.Services.AddSingleton<IRepository<Schedule>, SchedulesRepository>();
 
-// Добавление AutoMapper для маппинга
+// Р”РѕР±Р°РІР»РµРЅРёРµ AutoMapper РґР»СЏ РјР°РїРїРёРЅРіР°
 builder.Services.AddAutoMapper(typeof(Mapping));
 
 var app = builder.Build();
 
-// Настройка для разработки
+// РќР°СЃС‚СЂРѕР№РєР° РґР»СЏ СЂР°Р·СЂР°Р±РѕС‚РєРё
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -41,7 +41,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// Маршруты для контроллеров
+// РњР°СЂС€СЂСѓС‚С‹ РґР»СЏ РєРѕРЅС‚СЂРѕР»Р»РµСЂРѕРІ
 app.MapControllers();
 
 app.Run();
