@@ -15,22 +15,15 @@ public class Mapping : Profile
     public Mapping()
     {
         // Маппинг для Transport
-        CreateMap<Transport, TransportDto>();
-        CreateMap<TransportDto, Transport>();
-        CreateMap<Transport, TransportFullDto>();
-        CreateMap<TransportFullDto, Transport>();
-        
+        CreateMap<Transport, TransportDto>().ReverseMap();
+        CreateMap<Transport, TransportFullDto>().ReverseMap();
+
         //Driver
-        CreateMap<Driver, DriverDto>();
-        CreateMap<DriverDto, Driver>();
-        CreateMap<Driver, DriverFullDto>();
-        CreateMap<DriverFullDto, Driver>();
+        CreateMap<Driver, DriverDto>().ReverseMap();
+        CreateMap<Driver, DriverFullDto>().ReverseMap();
 
         //Schedule
-        CreateMap<Schedule, SchedulesDto>();
-        CreateMap<SchedulesDto, Schedule>();
-        CreateMap<Schedule, SchedulesFullDto>();
-        CreateMap<SchedulesFullDto, Schedule>();
-
+        CreateMap<Schedule, SchedulesDto>().ReverseMap();
+        CreateMap<Schedule, SchedulesFullDto>().ReverseMap();
     }
 }
