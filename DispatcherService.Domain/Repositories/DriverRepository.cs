@@ -35,10 +35,6 @@ public class DriverRepository : IRepository<Driver>
     /// <returns>Объект Driver или null, если водитель не найден.</returns>
     public Driver? GetById(int id) => _drivers.Find(d => d.Id == id);
 
- /*   public object GetById(object id)
-    {
-        throw new NotImplementedException();
-    }*/
 
     /// <summary>
     /// Добавляет нового водителя.
