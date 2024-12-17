@@ -2,13 +2,17 @@ using System.Reflection;
 using DispatcherService.API;
 using DispatcherService.API.DTO;
 using DispatcherService.API.Services;
+using DispatcherService.Domain;
 using DispatcherService.Domain.Entities;
 using DispatcherService.Domain.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// РќР°СЃС‚СЂРѕР№РєР° СЃР»СѓР¶Р± Рё СЃРµСЂРІРёСЃРѕРІ
+// Добавление контроллеров
 builder.Services.AddControllers();
+
+// Добавление генератора документации Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -16,23 +20,27 @@ builder.Services.AddSwaggerGen(options =>
     options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 });
 
-// Р”РѕР±Р°РІР»РµРЅРёРµ СЃРµСЂРІРёСЃРѕРІ
-builder.Services.AddSingleton<IService<DriverDto, DriverFullDto>, DriverService>();
-builder.Services.AddSingleton<IService<TransportDto, TransportFullDto>, TransportService>();
-builder.Services.AddSingleton<IService<SchedulesDto, SchedulesFullDto>, SchedulesService>();
-builder.Services.AddSingleton<IQueryService, QueryService>();
+// Регистрация сервисов для работы с сущностями
+builder.Services.AddScoped<IService<DriverDto, DriverFullDto>, DriverService>();
+builder.Services.AddScoped<IService<SchedulesDto, SchedulesFullDto>, SchedulesService>();
+builder.Services.AddScoped<IService<TransportDto, TransportFullDto>, TransportService>();
+builder.Services.AddScoped<IQueryService, QueryService>();
 
-// Р”РѕР±Р°РІР»РµРЅРёРµ СЂРµРїРѕР·РёС‚РѕСЂРёРµРІ
-builder.Services.AddSingleton<IRepository<Driver>, DriverRepository>();
-builder.Services.AddSingleton<IRepository<Transport>, TransportRepository>();
-builder.Services.AddSingleton<IRepository<Schedule>, SchedulesRepository>();
+// Регистрация репозиториев для работы с базой данных
+builder.Services.AddScoped<IRepository<Driver>, DriverRepository>();
+builder.Services.AddScoped<IRepository<Schedule>, SchedulesRepository>();
+builder.Services.AddScoped<IRepository<Transport>, TransportRepository>();
 
-// Р”РѕР±Р°РІР»РµРЅРёРµ AutoMapper РґР»СЏ РјР°РїРїРёРЅРіР°
+// Подключение контекста базы данных с использованием PostgreSQL
+builder.Services.AddDbContext<DispatcherServiceContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("Postgre")));
+
+// Подключение AutoMapper для автоматического маппинга DTO и сущностей
 builder.Services.AddAutoMapper(typeof(Mapping));
 
 var app = builder.Build();
 
-// РќР°СЃС‚СЂРѕР№РєР° РґР»СЏ СЂР°Р·СЂР°Р±РѕС‚РєРё
+// Подключение Swagger в режиме разработки
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -41,7 +49,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// РњР°СЂС€СЂСѓС‚С‹ РґР»СЏ РєРѕРЅС‚СЂРѕР»Р»РµСЂРѕРІ
 app.MapControllers();
 
 app.Run();
