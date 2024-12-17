@@ -12,7 +12,7 @@ namespace DispatcherService.API.Services;
 public class DriverService(IRepository<Driver> driverRepository, IMapper mapper)
     : IService<DriverDto, DriverFullDto>
 {
-    private int _id = 1;
+    //private int _id = 1;
 
     /// <summary>
     /// Удаляет водителя по указанному идентификатору.
@@ -52,7 +52,7 @@ public class DriverService(IRepository<Driver> driverRepository, IMapper mapper)
     public DriverFullDto? Post(DriverDto entity)
     {
         var driver = mapper.Map<Driver>(entity);
-        driver.Id = _id++;
+        //driver.Id = _id++;
         return mapper.Map<DriverFullDto>(driverRepository.Post(driver));
     }
 

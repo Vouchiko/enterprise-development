@@ -2,13 +2,17 @@ using System.Reflection;
 using DispatcherService.API;
 using DispatcherService.API.DTO;
 using DispatcherService.API.Services;
+using DispatcherService.Domain;
 using DispatcherService.Domain.Entities;
 using DispatcherService.Domain.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Настройка служб и сервисов
+// Добавление контроллеров
 builder.Services.AddControllers();
+
+// Добавление генератора документации Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -17,15 +21,19 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 // Добавление сервисов
-builder.Services.AddSingleton<IService<DriverDto, DriverFullDto>, DriverService>();
-builder.Services.AddSingleton<IService<TransportDto, TransportFullDto>, TransportService>();
-builder.Services.AddSingleton<IService<SchedulesDto, SchedulesFullDto>, SchedulesService>();
-builder.Services.AddSingleton<IQueryService, QueryService>();
+builder.Services.AddScoped<IService<DriverDto, DriverFullDto>, DriverService>();
+builder.Services.AddScoped<IService<SchedulesDto, SchedulesFullDto>, SchedulesService>();
+builder.Services.AddScoped<IService<TransportDto, TransportFullDto>, TransportService>();
+builder.Services.AddScoped<IQueryService, QueryService>();
 
-// Добавление репозиториев
-builder.Services.AddSingleton<IRepository<Driver>, DriverRepository>();
-builder.Services.AddSingleton<IRepository<Transport>, TransportRepository>();
-builder.Services.AddSingleton<IRepository<Schedule>, SchedulesRepository>();
+//Добавление репозиториев
+builder.Services.AddScoped<IRepository<Driver>, DriverRepository>();
+builder.Services.AddScoped<IRepository<Schedule>, SchedulesRepository>();
+builder.Services.AddScoped<IRepository<Transport>, TransportRepository>();
+
+// Подключение контекста базы данных с использованием PostgreSQL
+builder.Services.AddDbContext<DispatcherServiceContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("Postgre")));
 
 // Добавление AutoMapper для маппинга
 builder.Services.AddAutoMapper(typeof(Mapping));
@@ -41,7 +49,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// Маршруты для контроллеров
 app.MapControllers();
 
 app.Run();

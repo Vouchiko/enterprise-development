@@ -16,7 +16,7 @@ public class SchedulesService(
     IMapper mapper)
     : IService<SchedulesDto, SchedulesFullDto>
 {
-    private int _id = 1;
+    //private int _id = 1;
 
     /// <summary>
     /// Удаляет расписание по указанному идентификатору.
@@ -74,7 +74,7 @@ public class SchedulesService(
         var schedule = mapper.Map<Schedule>(entity);
         if (schedule == null) return null;
 
-        schedule.Id = _id++;
+        //schedule.Id = _id++;
 
         var scheduleFullDto = mapper.Map<SchedulesFullDto>(schedulesRepository.Post(schedule));
 

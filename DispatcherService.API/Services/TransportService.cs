@@ -12,7 +12,7 @@ namespace DispatcherService.API.Services;
 public class TransportService(IRepository<Transport> transportRepository, IMapper mapper)
     : IService<TransportDto, TransportFullDto>
 {
-    private int _id = 1;
+    //private int _id = 1;
 
     /// <summary>
     /// Удаляет транспорт по указанному идентификатору.
@@ -52,7 +52,7 @@ public class TransportService(IRepository<Transport> transportRepository, IMappe
     public TransportFullDto? Post(TransportDto entity)
     {
         var transport = mapper.Map<Transport>(entity);
-        transport.Id = _id++;
+        //transport.Id = _id++;
         return mapper.Map<TransportFullDto>(transportRepository.Post(transport));
     }
 
