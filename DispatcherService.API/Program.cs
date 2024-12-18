@@ -9,10 +9,10 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Добавление контроллеров
+// Р”РѕР±Р°РІР»РµРЅРёРµ РєРѕРЅС‚СЂРѕР»Р»РµСЂРѕРІ
 builder.Services.AddControllers();
 
-// Добавление генератора документации Swagger
+// Р”РѕР±Р°РІР»РµРЅРёРµ РіРµРЅРµСЂР°С‚РѕСЂР° РґРѕРєСѓРјРµРЅС‚Р°С†РёРё Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -20,27 +20,27 @@ builder.Services.AddSwaggerGen(options =>
     options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 });
 
-// Регистрация сервисов для работы с сущностями
+// Р”РѕР±Р°РІР»РµРЅРёРµ СЃРµСЂРІРёСЃРѕРІ РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ СЃСѓС‰РЅРѕСЃС‚СЏРјРё
 builder.Services.AddScoped<IService<DriverDto, DriverFullDto>, DriverService>();
 builder.Services.AddScoped<IService<SchedulesDto, SchedulesFullDto>, SchedulesService>();
 builder.Services.AddScoped<IService<TransportDto, TransportFullDto>, TransportService>();
 builder.Services.AddScoped<IQueryService, QueryService>();
 
-// Регистрация репозиториев для работы с базой данных
+// Р”РѕР±Р°РІР»РµРЅРёРµ СЂРµРїРѕР·РёС‚РѕСЂРёРµРІ РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ Р±Р°Р·РѕР№ РґР°РЅРЅС‹С…
 builder.Services.AddScoped<IRepository<Driver>, DriverRepository>();
 builder.Services.AddScoped<IRepository<Schedule>, SchedulesRepository>();
 builder.Services.AddScoped<IRepository<Transport>, TransportRepository>();
 
-// Подключение контекста базы данных с использованием PostgreSQL
+// РџРѕРґРєР»СЋС‡РµРЅРёРµ РєРѕРЅС‚РµРєСЃС‚Р° Р±Р°Р·С‹ РґР°РЅРЅС‹С… СЃ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРµРј PostgreSQL
 builder.Services.AddDbContext<DispatcherServiceContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Postgre")));
 
-// Подключение AutoMapper для автоматического маппинга DTO и сущностей
+// РџРѕРґРєР»СЋС‡РµРЅРёРµ AutoMapper РґР»СЏ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРѕРіРѕ РјР°РїРїРёРЅРіР° DTO Рё СЃСѓС‰РЅРѕСЃС‚РµР№
 builder.Services.AddAutoMapper(typeof(Mapping));
 
 var app = builder.Build();
 
-// Подключение Swagger в режиме разработки
+// РџРѕРґРєР»СЋС‡РµРЅРёРµ Swagger РІ СЂРµР¶РёРјРµ СЂР°Р·СЂР°Р±РѕС‚РєРё
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
