@@ -11,7 +11,7 @@ public class DispatcherServiceContext(DbContextOptions<DispatcherServiceContext>
     /// <summary>
     /// Таблица водителей.
     /// </summary>
-    public DbSet<Driver> Drivers { get; set; }
+    public DbSet<Driver> Driver { get; set; }
 
     /// <summary>
     /// Таблица расписаний.
@@ -21,7 +21,7 @@ public class DispatcherServiceContext(DbContextOptions<DispatcherServiceContext>
     /// <summary>
     /// Таблица транспорта.
     /// </summary>
-    public DbSet<Transport> Transports { get; set; }
+    public DbSet<Transport> Transport { get; set; }
 
     /// <summary>
     /// Настройка схемы базы данных с использованием Fluent API.

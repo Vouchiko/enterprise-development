@@ -1,11 +1,10 @@
 ﻿using DispatcherService.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace DispatcherService.Domain.Repositories;
 
-public class DriverRepository : IRepository<Driver>
+public class DriverRepository(DispatcherServiceContext context) : IRepository<Driver>
 {
-    private readonly List<Driver> _drivers = new();
-
     /// <summary>
     /// Удаляет водителя по идентификатору.
     /// </summary>
@@ -18,7 +17,8 @@ public class DriverRepository : IRepository<Driver>
         if (driver == null)
             return false;
 
-        _drivers.Remove(driver);
+        context.Driver.Remove(driver);
+        context.SaveChanges();
         return true;
     }
 
@@ -26,15 +26,14 @@ public class DriverRepository : IRepository<Driver>
     /// Возвращает всех водителей.
     /// </summary>
     /// <returns>Список водителей.</returns>
-    public IEnumerable<Driver> GetAll() => _drivers;
+    public IEnumerable<Driver> GetAll() => context.Driver.ToList();
 
     /// <summary>
     /// Возвращает водителя по идентификатору.
     /// </summary>
     /// <param name="id">Идентификатор водителя.</param>
     /// <returns>Объект Driver или null, если водитель не найден.</returns>
-    public Driver? GetById(int id) => _drivers.Find(d => d.Id == id);
-
+    public Driver? GetById(int id) => context.Driver.FirstOrDefault(d => d.Id == id);
 
     /// <summary>
     /// Добавляет нового водителя.
@@ -43,7 +42,8 @@ public class DriverRepository : IRepository<Driver>
     /// <returns>Добавленный объект Driver.</returns>
     public Driver? Post(Driver entity)
     {
-        _drivers.Add(entity);
+        context.Driver.Add(entity);
+        context.SaveChanges();
         return entity;
     }
 
@@ -64,6 +64,8 @@ public class DriverRepository : IRepository<Driver>
         oldDriver.DriverLicense = entity.DriverLicense;
         oldDriver.Address = entity.Address;
         oldDriver.PhoneNumber = entity.PhoneNumber;
+
+        context.SaveChanges();
         return true;
     }
 }

@@ -1,11 +1,10 @@
 ﻿using DispatcherService.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace DispatcherService.Domain.Repositories;
 
-public class TransportRepository : IRepository<Transport>
+public class TransportRepository(DispatcherServiceContext context) : IRepository<Transport>
 {
-    private readonly List<Transport> _transports = new();
-
     /// <summary>
     /// Удаляет транспортное средство по идентификатору.
     /// </summary>
@@ -18,7 +17,8 @@ public class TransportRepository : IRepository<Transport>
         if (transport == null)
             return false;
 
-        _transports.Remove(transport);
+        context.Transport.Remove(transport);
+        context.SaveChanges();
         return true;
     }
 
@@ -26,14 +26,14 @@ public class TransportRepository : IRepository<Transport>
     /// Возвращает список всех транспортных средств.
     /// </summary>
     /// <returns>Список транспортных средств.</returns>
-    public IEnumerable<Transport> GetAll() => _transports;
+    public IEnumerable<Transport> GetAll() => context.Transport.ToList();
 
     /// <summary>
     /// Возвращает транспортное средство по идентификатору.
     /// </summary>
     /// <param name="id">Идентификатор транспортного средства.</param>
     /// <returns>Объект Transport или null, если транспортное средство не найдено.</returns>
-    public Transport? GetById(int id) => _transports.Find(t => t.Id == id);
+    public Transport? GetById(int id) => context.Transport.FirstOrDefault(t => t.Id == id);
 
     /// <summary>
     /// Добавляет новое транспортное средство.
@@ -42,7 +42,8 @@ public class TransportRepository : IRepository<Transport>
     /// <returns>Добавленный объект Transport.</returns>
     public Transport? Post(Transport entity)
     {
-        _transports.Add(entity);
+        context.Transport.Add(entity);
+        context.SaveChanges();
         return entity;
     }
 
@@ -64,6 +65,8 @@ public class TransportRepository : IRepository<Transport>
         oldTransport.IsLowFloor = entity.IsLowFloor;
         oldTransport.MaxCapacity = entity.MaxCapacity;
         oldTransport.YearOfManufacture = entity.YearOfManufacture;
+
+        context.SaveChanges();
         return true;
     }
 }

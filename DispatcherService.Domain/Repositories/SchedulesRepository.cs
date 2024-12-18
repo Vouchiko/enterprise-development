@@ -1,11 +1,10 @@
 ﻿using DispatcherService.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace DispatcherService.Domain.Repositories;
 
-public class SchedulesRepository : IRepository<Schedule>
+public class SchedulesRepository(DispatcherServiceContext context, IRepository<Driver> driverRepository, IRepository<Transport> transportRepository) : IRepository<Schedule>
 {
-    private readonly List<Schedule> _schedules = new();
-
     /// <summary>
     /// Удаляет расписание по идентификатору.
     /// </summary>
@@ -18,7 +17,8 @@ public class SchedulesRepository : IRepository<Schedule>
         if (schedule == null)
             return false;
 
-        _schedules.Remove(schedule);
+        context.Schedules.Remove(schedule);
+        context.SaveChanges();
         return true;
     }
 
@@ -26,14 +26,14 @@ public class SchedulesRepository : IRepository<Schedule>
     /// Возвращает список всех расписаний.
     /// </summary>
     /// <returns>Список расписаний.</returns>
-    public IEnumerable<Schedule> GetAll() => _schedules;
+    public IEnumerable<Schedule> GetAll() => context.Schedules.ToList();
 
     /// <summary>
     /// Возвращает расписание по идентификатору.
     /// </summary>
     /// <param name="id">Идентификатор расписания.</param>
     /// <returns>Объект Schedule или null, если расписание не найдено.</returns>
-    public Schedule? GetById(int id) => _schedules.Find(s => s.Id == id);
+    public Schedule? GetById(int id) => context.Schedules.FirstOrDefault(s => s.Id == id);
 
     /// <summary>
     /// Добавляет новое расписание.
@@ -42,7 +42,15 @@ public class SchedulesRepository : IRepository<Schedule>
     /// <returns>Добавленный объект Schedule.</returns>
     public Schedule? Post(Schedule entity)
     {
-        _schedules.Add(entity);
+        var driver = driverRepository.GetById(entity.Driver?.Id ?? - 1);
+
+        var transport = transportRepository.GetById(entity.Transport?.Id ?? -1);
+
+        if (driver == null || transport == null)
+            return null;
+
+        context.Schedules.Add(entity);
+        context.SaveChanges();
         return entity;
     }
 
@@ -58,6 +66,12 @@ public class SchedulesRepository : IRepository<Schedule>
         if (oldSchedule == null)
             return false;
 
+        var driver = driverRepository.GetById(entity.Driver?.Id ?? -1);
+        var transport = transportRepository.GetById(entity.Transport?.Id ?? -1);
+
+        if (driver == null || transport == null)
+            return false;
+
         oldSchedule.RouteNumber = entity.RouteNumber;
         oldSchedule.StartTime = entity.StartTime;
         oldSchedule.EndTime = entity.EndTime;
@@ -65,6 +79,8 @@ public class SchedulesRepository : IRepository<Schedule>
         oldSchedule.Driver = entity.Driver;
         oldSchedule.TransportId = entity.TransportId;
         oldSchedule.DriverId = entity.DriverId;
+
+        context.SaveChanges();
         return true;
     }
 }
