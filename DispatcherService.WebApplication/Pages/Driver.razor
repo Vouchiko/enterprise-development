@@ -1,0 +1,218 @@
+﻿@page "/"
+@using MudBlazor
+@inject HttpClient Http
+@inject ServerApi Api
+
+<PageTitle>Drivers</PageTitle>
+
+<h1>Driver Management</h1>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Full Name</th>
+            <th>Driver License</th>
+            <th>Phone Number</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (_drivers == null || !_drivers.Any())
+        {
+            <tr>
+                <td colspan="5" class="text-center">No drivers found.</td>
+            </tr>
+        }
+        else
+        {
+            @foreach (var driver in _drivers)
+            {
+                <tr>
+                    <td>@driver.Id</td>
+                    <td>@driver.FullName</td>
+                    <td>@driver.DriverLicense</td>
+                    <td>@driver.PhoneNumber</td>
+                    <td>
+                        <button class="btn btn-primary" @onclick="() => ShowUpdForm(driver.Id)">Edit</button>
+                        <button class="btn btn-danger" @onclick="() => DeleteDriver(driver.Id)">Delete</button>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+<h3>@(flagAdd ? "Add New Driver" : "Edit Driver")</h3>
+
+<EditForm Model="@currentDriver" OnValidSubmit="HandleFormSubmit">
+    <DataAnnotationsValidator />
+    <div class="mb-3">
+        <label for="fullName" class="form-label">Full Name</label>
+        <InputText id="fullName" class="form-control" @bind-Value="currentDriver.FullName" />
+    </div>
+    <div class="mb-3">
+        <label for="passport" class="form-label">Passport</label>
+        <InputText id="passport" class="form-control" @bind-Value="currentDriver.Passport" />
+    </div>
+    <div class="mb-3">
+        <label for="driverLicense" class="form-label">Driver License</label>
+        <InputText id="driverLicense" class="form-control" @bind-Value="currentDriver.DriverLicense" />
+    </div>
+    <div class="mb-3">
+        <label for="address" class="form-label">Address</label>
+        <InputText id="address" class="form-control" @bind-Value="currentDriver.Address" />
+    </div>
+    <div class="mb-3">
+        <label for="phoneNumber" class="form-label">Phone Number</label>
+        <InputText id="phoneNumber" class="form-control" @bind-Value="currentDriver.PhoneNumber" />
+    </div>
+    <button type="submit" class="btn btn-success">Save</button>
+    <button type="button" class="btn btn-secondary" @onclick="ClearForm">Cancel</button>
+</EditForm>
+
+@code {
+    private List<DriverFullDto> _drivers = new();
+    private DriverFullDto currentDriver = new()
+        {
+            FullName = string.Empty,
+            Passport = string.Empty,
+            DriverLicense = string.Empty,
+            Address = string.Empty,
+            PhoneNumber = string.Empty
+        };
+    private string driverUrl = "api/Driver";
+    private bool flagAdd = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadDrivers();
+    }
+
+    private async Task LoadDrivers()
+    {
+        try
+        {
+            _drivers = (await Api.DriverAllAsync()).ToList();
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Error loading drivers: {ex.Message}");
+        }
+    }
+
+    private async Task AddNewDriver()
+    {
+        try
+        {
+            var tmp = new DriverDto
+                {
+                    FullName = currentDriver.FullName,
+                    Passport = currentDriver.Passport,
+                    DriverLicense = currentDriver.DriverLicense,
+                    Address = currentDriver.Address,
+                    PhoneNumber = currentDriver.PhoneNumber
+                };
+            var response = await Api.DriverPOSTAsync(tmp);
+
+            if (response != null)
+            {
+                ClearForm();
+                await LoadDrivers();
+            }
+            else
+            {
+                Console.Error.WriteLine("Failed to add new driver.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Error adding driver: {ex.Message}");
+        }
+    }
+
+    private async Task DeleteDriver(int driverId)
+    {
+        try
+        {
+            await Api.DriverDELETEAsync(driverId);
+            await LoadDrivers();
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Error deleting driver: {ex.Message}");
+        }
+    }
+
+    private async Task UpdateDriver()
+    {
+        try
+        {
+            await Api.DriverPUTAsync(currentDriver.Id, new DriverDto
+                {
+                    FullName = currentDriver.FullName,
+                    Passport = currentDriver.Passport,
+                    DriverLicense = currentDriver.DriverLicense,
+                    Address = currentDriver.Address,
+                    PhoneNumber = currentDriver.PhoneNumber
+                });
+            ClearForm();
+            await LoadDrivers();
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Error updating driver: {ex.Message}");
+        }
+    }
+
+    private async Task ShowUpdForm(int driverId)
+    {
+        flagAdd = false;
+        try
+        {
+            var response = await Api.DriverGETAsync(driverId);
+            if (response != null)
+            {
+                currentDriver = new DriverFullDto
+                    {
+                        Id = response.Id,
+                        FullName = response.FullName,
+                        Passport = response.Passport,
+                        DriverLicense = response.DriverLicense,
+                        Address = response.Address,
+                        PhoneNumber = response.PhoneNumber
+                    };
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Error loading driver details: {ex.Message}");
+        }
+    }
+
+    private void ClearForm()
+    {
+        flagAdd = true;
+        currentDriver = new DriverFullDto
+            {
+                Id = 0,
+                FullName = string.Empty,
+                Passport = string.Empty,
+                DriverLicense = string.Empty,
+                Address = string.Empty,
+                PhoneNumber = string.Empty
+            };
+    }
+
+    private async Task HandleFormSubmit()
+    {
+        if (flagAdd)
+        {
+            await AddNewDriver();
+        }
+        else
+        {
+            await UpdateDriver();
+        }
+    }
+}

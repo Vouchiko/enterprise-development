@@ -1,0 +1,281 @@
+﻿@page "/queries"
+@using MudBlazor
+@inject ServerApi Api
+
+<h2>Queries</h2>
+
+<MudExpansionPanels MultiExpansion="true">
+    <!-- Query 1: Transport Details by ID -->
+    <MudExpansionPanel Text="Query 1: Display transport details by ID">
+        <div class="input-container">
+            <div class="mb-3">
+                <MudTextField id="transportId" Label="Transport ID" @bind-Value="_transportId" />
+            </div>
+        </div>
+        <div class="button-container">
+            <MudButton Color="MudBlazor.Color.Primary" OnClick="@(() => ClickHandler(1))">Get result</MudButton>
+            <MudButton Color="MudBlazor.Color.Error" OnClick="@(() => ClearTask(1))">Clear</MudButton>
+        </div>
+        <div class="table-container">
+            @if (transportDetails != null)
+            {
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Transport ID</th>
+                            <th>Type</th>
+                            <th>Model</th>
+                            <th>License Plate</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>@transportDetails.Id</td>
+                            <td>@transportDetails.Type</td>
+                            <td>@transportDetails.Model</td>
+                            
+                        </tr>
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p class="no-data">No data available.</p>
+            }
+        </div>
+    </MudExpansionPanel>
+
+    <!-- Query 2: Drivers by Trip Period -->
+    <MudExpansionPanel Text="Query 2: Display drivers by trip period">
+        <div class="input-container">
+            <div class="mb-3">
+                <MudDatePicker id="startDate" Label="Start Date" @bind-Date="_startDate" Editable="true" />
+            </div>
+            <div class="mb-3">
+                <MudDatePicker id="endDate" Label="End Date" @bind-Date="_endDate" Editable="true" />
+            </div>
+        </div>
+        <div class="button-container">
+            <MudButton Color="MudBlazor.Color.Primary" OnClick="@(() => ClickHandler(2))">Get result</MudButton>
+            <MudButton Color="MudBlazor.Color.Error" OnClick="@(() => ClearTask(2))">Clear</MudButton>
+        </div>
+        <div class="table-container">
+            @if (drivers != null)
+            {
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Driver Full Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var driver in drivers)
+                        {
+                            <tr>
+                                <td>@driver.FullName</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p class="no-data">No data available.</p>
+            }
+        </div>
+    </MudExpansionPanel>
+
+    <!-- Query 3: Total Trip Time by Transport Type and Model -->
+    <MudExpansionPanel Text="Query 3: Display total trip time by transport type and model">
+        <div class="button-container">
+            <MudButton Color="MudBlazor.Color.Primary" OnClick="@(() => ClickHandler(3))">Get result</MudButton>
+            <MudButton Color="MudBlazor.Color.Error" OnClick="@(() => ClearTask(3))">Clear</MudButton>
+        </div>
+        <div class="table-container">
+            @if (tripSummary != null)
+            {
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Transport Type</th>
+                            <th>Model</th>
+                            <th>Total Trip Time (hours)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var summary in tripSummary)
+                        {
+                            <tr>
+                                <td>@summary.TransportType</td>
+                                <td>@summary.Model</td>
+                                <td>@summary.TotalTime</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p class="no-data">No data available.</p>
+            }
+        </div>
+    </MudExpansionPanel>
+
+    <!-- Query 4: Top 5 Drivers by Trip Count -->
+    <MudExpansionPanel Text="Query 4: Display top 5 drivers by trip count">
+        <div class="button-container">
+            <MudButton Color="MudBlazor.Color.Primary" OnClick="@(() => ClickHandler(4))">Get result</MudButton>
+            <MudButton Color="MudBlazor.Color.Error" OnClick="@(() => ClearTask(4))">Clear</MudButton>
+        </div>
+        <div class="table-container">
+            @if (topDrivers != null)
+            {
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Driver Full Name</th>
+                            <th>Trip Count</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var driver in topDrivers)
+                        {
+                            <tr>
+                                <td>@driver.DriverFullName</td>
+                                <td>@driver.TripCount</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p class="no-data">No data available.</p>
+            }
+        </div>
+    </MudExpansionPanel>
+
+    <!-- Query 5: Most Trips by Transport in Period -->
+    <MudExpansionPanel Text="Query 5: Display transports with the most trips in a period">
+        <div class="input-container">
+            <div class="mb-3">
+                <MudDatePicker id="startDateMostTrips" Label="Start Date" @bind-Date="_startDateMostTrips" Editable="true" />
+            </div>
+            <div class="mb-3">
+                <MudDatePicker id="endDateMostTrips" Label="End Date" @bind-Date="_endDateMostTrips" Editable="true" />
+            </div>
+        </div>
+        <div class="button-container">
+            <MudButton Color="MudBlazor.Color.Primary" OnClick="@(() => ClickHandler(5))">Get result</MudButton>
+            <MudButton Color="MudBlazor.Color.Error" OnClick="@(() => ClearTask(5))">Clear</MudButton>
+        </div>
+        <div class="table-container">
+            @if (mostUsedTransports != null)
+            {
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Transport ID</th>
+                            <th>Type</th>
+                            <th>Model</th>
+                            <th>License Plate</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var transport in mostUsedTransports)
+                        {
+                            <tr>
+                                <td>@transport.Id</td>
+                                <td>@transport.Type</td>
+                                <td>@transport.Model</td>
+                               
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p class="no-data">No data available.</p>
+            }
+        </div>
+    </MudExpansionPanel>
+</MudExpansionPanels>
+
+@code {
+    private TransportFullDto transportDetails = null!;
+    private List<DriverFullDto> drivers = null!;
+    private List<TransportTripSummaryDto> tripSummary = null!;
+    private List<DriverTripStatisticsDto> topDrivers = null!;
+    private List<TransportFullDto> mostUsedTransports = null!;
+
+    private int _transportId;
+    private DateTime? _startDate;
+    private DateTime? _endDate;
+    private DateTime? _startDateMostTrips;
+    private DateTime? _endDateMostTrips;
+
+    private async Task ClickHandler(int taskId)
+    {
+        try
+        {
+            switch (taskId)
+            {
+                case 1:
+                    var response1 = (await Api.TransportAsync(_transportId));
+                    if (response1 != null)
+                    {
+                        transportDetails = response1;
+                    }
+                    break;
+                case 2:
+                    if (_startDate.HasValue && _endDate.HasValue)
+                    {
+                        var response2 = (await Api.TripPeriodAsync(_startDate, _endDate)).ToList();
+                        if (response2 != null)
+                        {
+                            drivers = response2;
+                        }
+                    }
+                    break;
+                case 3:
+                    var response3 = (await Api.TripSummaryAsync()).ToList();
+                    if (response3 != null)
+                    {
+                        tripSummary = response3;
+                    }
+                    break;
+                case 4:
+                    var response4 = (await Api.TripStatsAsync()).ToList();
+                    if (response4 != null)
+                    {
+                        topDrivers = response4;
+                    }
+                    break;
+                case 5:
+                    if (_startDateMostTrips.HasValue && _endDateMostTrips.HasValue)
+                    { 
+                        var response5 = (await Api.MostTripsAsync(_startDateMostTrips, _endDateMostTrips)).ToList();
+                        if (response5 != null) mostUsedTransports = response5;
+                    }
+                    break;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading data for Query {taskId}: {ex.Message}");
+        }
+    }
+
+    private void ClearTask(int taskId)
+    {
+        switch (taskId)
+        {
+            case 1: transportDetails = null!; break;
+            case 2: drivers = null!; break;
+            case 3: tripSummary = null!; break;
+            case 4: topDrivers = null!; break;
+            case 5: mostUsedTransports = null!; break;
+        }
+    }
+}

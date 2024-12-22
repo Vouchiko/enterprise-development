@@ -1,0 +1,203 @@
+﻿@page "/schedules"
+@using MudBlazor
+@inject ServerApi Api
+
+<PageTitle>Schedules Management</PageTitle>
+
+<h1>Schedules Management</h1>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Route Number</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+            <th>Transport ID</th>
+            <th>Driver ID</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (_schedules == null || !_schedules.Any())
+        {
+            <tr>
+                <td colspan="7" class="text-center">No schedules found.</td>
+            </tr>
+        }
+        else
+        {
+            @foreach (var schedule in _schedules)
+            {
+                <tr>
+                    <td>@schedule.Id</td>
+                    <td>@schedule.RouteNumber</td>
+                    <td>@schedule.StartTime.ToString("g")</td>
+                    <td>@schedule.EndTime.ToString("g")</td>
+                    <td>@schedule.Transport?.Id</td>
+                    <td>@schedule.Driver?.Id</td>
+                    <td>
+                        <button class="btn btn-primary" @onclick="@(() => ShowUpdForm(schedule.Id))">Edit</button>
+                        <button class="btn btn-danger" @onclick="@(() => DeleteSchedule(schedule.Id))">Delete</button>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+<h3>@(flagAdd ? "Add New Schedule" : "Edit Schedule")</h3>
+
+<EditForm Model="@currentSchedule" OnValidSubmit=@HandleFormSubmit>
+    <DataAnnotationsValidator />
+    <div class="mb-3">
+        <label for="routeNumber" class="form-label">Route Number</label>
+        <InputText id="routeNumber" class="form-control" @bind-Value="currentSchedule.RouteNumber" />
+    </div>
+    <div class="mb-3">
+        <label for="startTime" class="form-label">Start Time</label>
+        <InputDate id="startTime" class="form-control" @bind-Value="currentSchedule.StartTime" />
+    </div>
+    <div class="mb-3">
+        <label for="endTime" class="form-label">End Time</label>
+        <InputDate id="endTime" class="form-control" @bind-Value="currentSchedule.EndTime" />
+    </div>
+    <div class="mb-3">
+        <label for="transportId" class="form-label">Transport ID</label>
+        <InputNumber id="transportId" class="form-control" @bind-Value="transportId" />
+    </div>
+    <div class="mb-3">
+        <label for="driverId" class="form-label">Driver ID</label>
+        <InputNumber id="driverId" class="form-control" @bind-Value="driverId" />
+    </div>
+    <button type="submit" class="btn btn-success">Save</button>
+    <button type="button" class="btn btn-secondary" @onclick="ClearForm">Cancel</button>
+</EditForm>
+
+@code {
+    private List<SchedulesFullDto> _schedules = new();
+    private SchedulesFullDto currentSchedule = new() { RouteNumber = "", StartTime = DateTime.Now, EndTime = DateTime.Now };
+    private bool flagAdd = true;
+    private int transportId;
+    private int driverId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadSchedules();
+    }
+
+    private async Task LoadSchedules()
+    {
+        try
+        {
+            _schedules = (await Api.SchedulesAllAsync()).ToList();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading schedules: {ex.Message}");
+        }
+    }
+
+    private async Task AddNewSchedule()
+    {
+        try
+        {
+            var newSchedule = new SchedulesDto
+                {
+                    RouteNumber = currentSchedule.RouteNumber,
+                    StartTime = currentSchedule.StartTime,
+                    EndTime = currentSchedule.EndTime,
+                    Transport = new TransportFullDto { Id = transportId },
+                    Driver = new DriverFullDto { Id = driverId }
+                };
+
+            var response = await Api.SchedulesPOSTAsync(newSchedule);
+            if (response != null)
+            {
+                ClearForm();
+                await LoadSchedules();
+            }
+            else
+            {
+                Console.WriteLine("Failed to add schedule.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error adding schedule: {ex.Message}");
+        }
+    }
+
+    private async Task DeleteSchedule(int scheduleId)
+    {
+        try
+        {
+            await Api.SchedulesDELETEAsync(scheduleId);
+            await LoadSchedules();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error deleting schedule: {ex.Message}");
+        }
+    }
+
+    private async Task UpdateSchedule()
+    {
+        try
+        {
+            await Api.SchedulesPUTAsync(currentSchedule.Id, new SchedulesDto
+                {
+                    RouteNumber = currentSchedule.RouteNumber,
+                    StartTime = currentSchedule.StartTime,
+                    EndTime = currentSchedule.EndTime,
+                    Transport = new TransportFullDto { Id = transportId },
+                    Driver = new DriverFullDto { Id = driverId }
+                });
+
+            ClearForm();
+            await LoadSchedules();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error updating schedule: {ex.Message}");
+        }
+    }
+
+    private async Task ShowUpdForm(int scheduleId)
+    {
+        flagAdd = false;
+        var response = await Api.SchedulesGETAsync(scheduleId);
+        if (response != null)
+        {
+            currentSchedule = new SchedulesFullDto
+                {
+                    Id = response.Id,
+                    RouteNumber = response.RouteNumber,
+                    StartTime = response.StartTime,
+                    EndTime = response.EndTime
+                };
+            transportId = response.Transport?.Id ?? 0;
+            driverId = response.Driver?.Id ?? 0;
+        }
+    }
+
+    private void ClearForm()
+    {
+        flagAdd = true;
+        currentSchedule = new SchedulesFullDto() { Id = 0, RouteNumber = "", StartTime = DateTime.Now, EndTime = DateTime.Now };
+        transportId = 0;
+        driverId = 0;
+    }
+
+    private async Task HandleFormSubmit()
+    {
+        if (flagAdd)
+        {
+            await AddNewSchedule();
+        }
+        else
+        {
+            await UpdateSchedule();
+        }
+    }
+}

@@ -1,0 +1,229 @@
+﻿@page "/transports"
+@using MudBlazor
+@inject HttpClient Http
+@inject ServerApi Api
+
+<PageTitle>Transports</PageTitle>
+
+<h1>Transport Management</h1>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Registration Number</th>
+            <th>Type</th>
+            <th>Model</th>
+            <th>Max Capacity</th>
+            <th>Year of Manufacture</th>
+            <th>Is Low Floor</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (_transports == null || !_transports.Any())
+        {
+            <tr>
+                <td colspan="8" class="text-center">No transports found.</td>
+            </tr>
+        }
+        else
+        {
+            @foreach (var transport in _transports)
+            {
+                <tr>
+                    <td>@transport.Id</td>
+                    <td>@transport.RegistrationNumber</td>
+                    <td>@transport.Type</td>
+                    <td>@transport.Model</td>
+                    <td>@transport.MaxCapacity</td>
+                    <td>@transport.YearOfManufacture</td>
+                    <td>@(transport.IsLowFloor == true ? "Yes" : "No")</td>
+                    <td>
+                        <button class="btn btn-primary" @onclick="() => ShowUpdForm(transport.Id)">Edit</button>
+                        <button class="btn btn-danger" @onclick="() => DeleteTransport(transport.Id)">Delete</button>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+<h3>@(flagAdd ? "Add New Transport" : "Edit Transport")</h3>
+
+<EditForm Model="@currentTransport" OnValidSubmit="HandleFormSubmit">
+    <DataAnnotationsValidator />
+    <div class="mb-3">
+        <label for="registrationNumber" class="form-label">Registration Number</label>
+        <InputText id="registrationNumber" class="form-control" @bind-Value="currentTransport.RegistrationNumber" />
+    </div>
+    <div class="mb-3">
+        <label for="type" class="form-label">Type</label>
+        <InputText id="type" class="form-control" @bind-Value="currentTransport.Type" />
+    </div>
+    <div class="mb-3">
+        <label for="model" class="form-label">Model</label>
+        <InputText id="model" class="form-control" @bind-Value="currentTransport.Model" />
+    </div>
+    <div class="mb-3">
+        <label for="maxCapacity" class="form-label">Max Capacity</label>
+        <InputNumber id="maxCapacity" class="form-control" @bind-Value="currentTransport.MaxCapacity" />
+    </div>
+    <div class="mb-3">
+        <label for="yearOfManufacture" class="form-label">Year of Manufacture</label>
+        <InputNumber id="yearOfManufacture" class="form-control" @bind-Value="currentTransport.YearOfManufacture" />
+    </div>
+    <button type="submit" class="btn btn-success">Save</button>
+    <button type="button" class="btn btn-secondary" @onclick="ClearForm">Cancel</button>
+</EditForm>
+
+@code {
+    private List<TransportFullDto> _transports = new();
+    private TransportFullDto currentTransport = new()
+        {
+            RegistrationNumber = string.Empty,
+            Type = string.Empty,
+            Model = string.Empty,
+            MaxCapacity = null,
+            YearOfManufacture = null,
+            IsLowFloor = false
+        };
+    private string transportUrl = "api/Transport";
+    private bool flagAdd = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadTransports();
+    }
+
+    private async Task LoadTransports()
+    {
+        try
+        {
+            _transports = (await Api.TransportAllAsync()).ToList();
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Error loading transports: {ex.Message}");
+        }
+    }
+
+    private async Task AddNewTransport()
+    {
+        try
+        {
+            var tmp = new TransportDto
+                {
+                    RegistrationNumber = currentTransport.RegistrationNumber,
+                    Type = currentTransport.Type,
+                    Model = currentTransport.Model,
+                    MaxCapacity = currentTransport.MaxCapacity,
+                    YearOfManufacture = currentTransport.YearOfManufacture,
+                    IsLowFloor = currentTransport.IsLowFloor
+                };
+            var response = await Api.TransportPOSTAsync(tmp);
+
+            if (response != null)
+            {
+                ClearForm();
+                await LoadTransports();
+            }
+            else
+            {
+                Console.Error.WriteLine("Failed to add new transport.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Error adding transport: {ex.Message}");
+        }
+    }
+
+    private async Task DeleteTransport(int transportId)
+    {
+        try
+        {
+            await Api.TransportDELETEAsync(transportId);
+            await LoadTransports();
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Error deleting transport: {ex.Message}");
+        }
+    }
+
+    private async Task UpdateTransport()
+    {
+        try
+        {
+            await Api.TransportPUTAsync(currentTransport.Id, new TransportDto
+                {
+                    RegistrationNumber = currentTransport.RegistrationNumber,
+                    Type = currentTransport.Type,
+                    Model = currentTransport.Model,
+                    MaxCapacity = currentTransport.MaxCapacity,
+                    YearOfManufacture = currentTransport.YearOfManufacture,
+                    IsLowFloor = currentTransport.IsLowFloor
+                });
+            ClearForm();
+            await LoadTransports();
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Error updating transport: {ex.Message}");
+        }
+    }
+
+    private async Task ShowUpdForm(int transportId)
+    {
+        flagAdd = false;
+        try
+        {
+            var response = await Api.TransportGETAsync(transportId);
+            if (response != null)
+            {
+                currentTransport = new TransportFullDto
+                    {
+                        Id = response.Id,
+                        RegistrationNumber = response.RegistrationNumber,
+                        Type = response.Type,
+                        Model = response.Model,
+                        MaxCapacity = response.MaxCapacity,
+                        YearOfManufacture = response.YearOfManufacture,
+                        IsLowFloor = response.IsLowFloor
+                    };
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Error loading transport details: {ex.Message}");
+        }
+    }
+
+    private void ClearForm()
+    {
+        flagAdd = true;
+        currentTransport = new TransportFullDto
+            {
+                Id = 0,
+                RegistrationNumber = string.Empty,
+                Type = string.Empty,
+                Model = string.Empty,
+                MaxCapacity = null,
+                YearOfManufacture = null,
+                IsLowFloor = false
+            };
+    }
+
+    private async Task HandleFormSubmit()
+    {
+        if (flagAdd)
+        {
+            await AddNewTransport();
+        }
+        else
+        {
+            await UpdateTransport();
+        }
+    }
+}

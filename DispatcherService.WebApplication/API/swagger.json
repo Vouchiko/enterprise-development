@@ -1,0 +1,1148 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "DispatcherService.API",
+    "version": "1.0"
+  },
+  "paths": {
+    "/api/Driver": {
+      "get": {
+        "tags": [
+          "Driver"
+        ],
+        "summary": "Возвращает список всех водителей",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DriverFullDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DriverFullDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DriverFullDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Driver"
+        ],
+        "summary": "Добавляет нового водителя",
+        "requestBody": {
+          "description": "Информация о новом водителе",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DriverDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DriverDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/DriverDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/DriverFullDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DriverFullDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DriverFullDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Driver/{id}": {
+      "get": {
+        "tags": [
+          "Driver"
+        ],
+        "summary": "Возвращает водителя по идентификатору",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Идентификатор водителя",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/DriverFullDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DriverFullDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DriverFullDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Driver"
+        ],
+        "summary": "Изменяет водителя по идентификатору",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Идентификатор водителя",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Обновлённая информация о водителе",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DriverDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DriverDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/DriverDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Driver"
+        ],
+        "summary": "Удаляет водителя по идентификатору",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Идентификатор водителя",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/Query/transport/{transportId}": {
+      "get": {
+        "tags": [
+          "Query"
+        ],
+        "summary": "Возвращает сведения о транспортном средстве по идентификатору",
+        "parameters": [
+          {
+            "name": "transportId",
+            "in": "path",
+            "description": "Идентификатор транспортного средства",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransportFullDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransportFullDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransportFullDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Query/drivers/trip-period": {
+      "get": {
+        "tags": [
+          "Query"
+        ],
+        "summary": "Возвращает всех водителей, совершивших поездки за заданный период, упорядоченных по ФИО",
+        "parameters": [
+          {
+            "name": "startDate",
+            "in": "query",
+            "description": "Начальная дата",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "description": "Конечная дата",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DriverFullDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DriverFullDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DriverFullDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Query/transport/trip-summary": {
+      "get": {
+        "tags": [
+          "Query"
+        ],
+        "summary": "Возвращает суммарное время поездок транспортных средств по типам и моделям",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TransportTripSummaryDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TransportTripSummaryDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TransportTripSummaryDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Query/drivers/top": {
+      "get": {
+        "tags": [
+          "Query"
+        ],
+        "summary": "Возвращает топ 5 водителей по количеству выполненных поездок",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DriverFullDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DriverFullDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DriverFullDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Query/drivers/trip-stats": {
+      "get": {
+        "tags": [
+          "Query"
+        ],
+        "summary": "Возвращает статистику поездок для каждого водителя (количество, среднее время, максимальное время)",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DriverTripStatisticsDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DriverTripStatisticsDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DriverTripStatisticsDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Query/transport/most-trips": {
+      "get": {
+        "tags": [
+          "Query"
+        ],
+        "summary": "Возвращает транспортные средства, совершившие максимальное количество поездок за указанный период",
+        "parameters": [
+          {
+            "name": "startDate",
+            "in": "query",
+            "description": "Начальная дата",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "description": "Конечная дата",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TransportFullDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TransportFullDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TransportFullDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Schedules": {
+      "get": {
+        "tags": [
+          "Schedules"
+        ],
+        "summary": "Возвращает список всех расписаний",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SchedulesFullDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SchedulesFullDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SchedulesFullDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Schedules"
+        ],
+        "summary": "Добавляет новое расписание",
+        "requestBody": {
+          "description": "Информация о новом расписании",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SchedulesDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SchedulesDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/SchedulesDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/SchedulesFullDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SchedulesFullDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SchedulesFullDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Schedules/{id}": {
+      "get": {
+        "tags": [
+          "Schedules"
+        ],
+        "summary": "Возвращает расписание по идентификатору",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Идентификатор расписания",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/SchedulesFullDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SchedulesFullDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SchedulesFullDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Schedules"
+        ],
+        "summary": "Изменяет расписание по идентификатору",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Идентификатор расписания",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Обновлённая информация о расписании",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SchedulesDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SchedulesDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/SchedulesDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Schedules"
+        ],
+        "summary": "Удаляет расписание по идентификатору",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Идентификатор расписания",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/Transport": {
+      "get": {
+        "tags": [
+          "Transport"
+        ],
+        "summary": "Возвращает список всех транспортных средств",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TransportFullDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TransportFullDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TransportFullDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Transport"
+        ],
+        "summary": "Добавляет новое транспортное средство",
+        "requestBody": {
+          "description": "Информация о новом транспортном средстве",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransportDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransportDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransportDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransportFullDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransportFullDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransportFullDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Transport/{id}": {
+      "get": {
+        "tags": [
+          "Transport"
+        ],
+        "summary": "Возвращает транспортное средство по идентификатору",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Идентификатор транспортного средства",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransportFullDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransportFullDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransportFullDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Transport"
+        ],
+        "summary": "Изменяет транспортное средство по идентификатору",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Идентификатор транспортного средства",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Обновлённая информация о транспортном средстве",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransportDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransportDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransportDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Transport"
+        ],
+        "summary": "Удаляет транспортное средство по идентификатору",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Идентификатор транспортного средства",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "DriverDto": {
+        "type": "object",
+        "properties": {
+          "fullName": {
+            "type": "string",
+            "description": "Полное имя водителя.",
+            "nullable": true
+          },
+          "passport": {
+            "type": "string",
+            "description": "Паспортные данные водителя.",
+            "nullable": true
+          },
+          "driverLicense": {
+            "type": "string",
+            "description": "Номер водительского удостоверения.",
+            "nullable": true
+          },
+          "address": {
+            "type": "string",
+            "description": "Адрес проживания водителя.",
+            "nullable": true
+          },
+          "phoneNumber": {
+            "type": "string",
+            "description": "Контактный номер телефона водителя.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Представляет информацию о водителе для передачи данных."
+      },
+      "DriverFullDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Идентификатор водителя.",
+            "format": "int32"
+          },
+          "fullName": {
+            "type": "string",
+            "description": "Полное имя водителя.",
+            "nullable": true
+          },
+          "passport": {
+            "type": "string",
+            "description": "Паспортные данные водителя.",
+            "nullable": true
+          },
+          "driverLicense": {
+            "type": "string",
+            "description": "Номер водительского удостоверения.",
+            "nullable": true
+          },
+          "address": {
+            "type": "string",
+            "description": "Адрес проживания водителя.",
+            "nullable": true
+          },
+          "phoneNumber": {
+            "type": "string",
+            "description": "Телефонный номер водителя.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "DriverTripStatisticsDto": {
+        "type": "object",
+        "properties": {
+          "driverFullName": {
+            "type": "string",
+            "description": "Полное имя водителя",
+            "nullable": true
+          },
+          "tripCount": {
+            "type": "integer",
+            "description": "Общее количество поездок",
+            "format": "int32"
+          },
+          "averageTime": {
+            "type": "number",
+            "description": "Среднее время одной поездки (в часах)",
+            "format": "double"
+          },
+          "maxTime": {
+            "type": "number",
+            "description": "Максимальное время одной поездки (в часах)",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Статистика поездок для водителя"
+      },
+      "SchedulesDto": {
+        "type": "object",
+        "properties": {
+          "routeNumber": {
+            "type": "string",
+            "description": "Номер маршрута.",
+            "nullable": true
+          },
+          "startTime": {
+            "type": "string",
+            "description": "Время начала поездки.",
+            "format": "date-time",
+            "nullable": true
+          },
+          "endTime": {
+            "type": "string",
+            "description": "Время окончания поездки.",
+            "format": "date-time",
+            "nullable": true
+          },
+          "transport": {
+            "$ref": "#/components/schemas/TransportFullDto"
+          },
+          "driver": {
+            "$ref": "#/components/schemas/DriverFullDto"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Представляет информацию о расписании для передачи данных."
+      },
+      "SchedulesFullDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Идентификатор расписания.",
+            "format": "int32"
+          },
+          "transportId": {
+            "type": "integer",
+            "description": "Идентификатор транспортного средства.",
+            "format": "int32"
+          },
+          "driverId": {
+            "type": "integer",
+            "description": "Идентификатор водителя.",
+            "format": "int32"
+          },
+          "routeNumber": {
+            "type": "string",
+            "description": "Номер маршрута.",
+            "nullable": true
+          },
+          "startTime": {
+            "type": "string",
+            "description": "Время начала рейса.",
+            "format": "date-time"
+          },
+          "endTime": {
+            "type": "string",
+            "description": "Время окончания рейса.",
+            "format": "date-time"
+          },
+          "transport": {
+            "$ref": "#/components/schemas/TransportFullDto"
+          },
+          "driver": {
+            "$ref": "#/components/schemas/DriverFullDto"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Представляет полную информацию о расписании для передачи данных."
+      },
+      "TransportDto": {
+        "type": "object",
+        "properties": {
+          "registrationNumber": {
+            "type": "string",
+            "description": "Регистрационный номер транспортного средства.",
+            "nullable": true
+          },
+          "type": {
+            "type": "string",
+            "description": "Тип транспортного средства (например, автобус, троллейбус).",
+            "nullable": true
+          },
+          "model": {
+            "type": "string",
+            "description": "Модель транспортного средства.",
+            "nullable": true
+          },
+          "isLowFloor": {
+            "type": "boolean",
+            "description": "Указывает, является ли транспортное средство низкопольным.",
+            "nullable": true
+          },
+          "maxCapacity": {
+            "type": "integer",
+            "description": "Максимальная вместимость пассажиров.",
+            "format": "int32",
+            "nullable": true
+          },
+          "yearOfManufacture": {
+            "type": "integer",
+            "description": "Год выпуска транспортного средства.",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Представляет информацию о транспортном средстве для передачи данных."
+      },
+      "TransportFullDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Идентификатор транспортного средства.",
+            "format": "int32"
+          },
+          "registrationNumber": {
+            "type": "string",
+            "description": "Регистрационный номер транспортного средства.",
+            "nullable": true
+          },
+          "type": {
+            "type": "string",
+            "description": "Тип транспортного средства.",
+            "nullable": true
+          },
+          "model": {
+            "type": "string",
+            "description": "Модель транспортного средства.",
+            "nullable": true
+          },
+          "maxCapacity": {
+            "type": "integer",
+            "description": "Максимальная вместимость пассажиров.",
+            "format": "int32",
+            "nullable": true
+          },
+          "yearOfManufacture": {
+            "type": "integer",
+            "description": "Год выпуска транспортного средства.",
+            "format": "int32",
+            "nullable": true
+          },
+          "isLowFloor": {
+            "type": "boolean",
+            "description": "Признак низкопольного транспортного средства.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Представляет полную информацию о транспортном средстве для передачи данных."
+      },
+      "TransportTripSummaryDto": {
+        "type": "object",
+        "properties": {
+          "transportType": {
+            "type": "string",
+            "description": "Тип транспортного средства",
+            "nullable": true
+          },
+          "model": {
+            "type": "string",
+            "description": "Модель транспортного средства",
+            "nullable": true
+          },
+          "totalTime": {
+            "type": "number",
+            "description": "Суммарное время поездок (в часах)",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Сводная информация о времени поездок для транспортных средств"
+      }
+    }
+  }
+}

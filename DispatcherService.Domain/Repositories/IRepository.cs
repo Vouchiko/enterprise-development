@@ -40,5 +40,4 @@ public interface IRepository<T>
     /// <param name="id">Идентификатор сущности</param>
     /// <returns>Результат операции</returns>
     public bool Delete(int id);
-    
 }
